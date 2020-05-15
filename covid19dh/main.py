@@ -2,6 +2,7 @@
 import datetime
 from io import StringIO,BytesIO
 import sys
+import warnings
 import zipfile
 
 import pandas as pd
@@ -22,13 +23,18 @@ def covid19(country = None,
             level   = 1,
             start   = datetime.date(2019,1,1),
             end     = None, # defaultly today
+            # TODO
             raw     = False,
             vintage = False,
             verbose = True,
             cache   = True):
-    # default today
-    if not end:
-        end = datetime.date.today()
+    # parse arguments
+    country = country.upper() if country is not None else None
+    end = datetime.datetime.now() if end is None else end
+    if isinstance(end, datetime.date):
+        end = datetime.datetime(end.year, end.month, end.day)
+    if isinstance(start, datetime.date):
+        start = datetime.datetime(start.year, start.month, start.day)
     
     # get url from level
     try:
@@ -42,9 +48,24 @@ def covid19(country = None,
     # parse
     with zipfile.ZipFile( BytesIO(response.content) ) as zz:
         with zz.open(filename) as fd:
-            x = pd.read_csv( fd )
+            df = pd.read_csv( fd )
+    # cast columns
+    df['date'] = df['date'].apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d"))
     
+    # filter
+    if country is not None:
+        # elementwise comparison works, but throws warning that it will be working better in the future
+        # no idea why, but I found solution to mute it as follows
+        with warnings.catch_warnings():
+            warnings.simplefilter(action='ignore', category=FutureWarning)
+            df = df[(df['iso_alpha_3'] == country) |
+                    (df['iso_alpha_2'] == country) |
+                    (df['iso_numeric'] == country)   ]
+    if start is not None:
+        df = df[df['date'] >= start]
+    if end is not None:
+        df = df[df['date'] <= end]
     
-    return x
+    return df
 
 __all__ = ["covid19"]
