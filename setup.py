@@ -14,7 +14,7 @@ setuptools.setup(
   packages=setuptools.find_packages(),
   license='GPL',
   url = 'https://www.covid19datahub.io/',
-  download_url = 'https://github.com/covid19datahub/python/archive/v0.0.1.tar.gz',
+  download_url = 'https://github.com/covid19datahub/Python/archive/0.0.1.tar.gz',
   keywords = ['2019-nCov', 'coronavirus', 'covid-19', 'covid-data', 'covid19-data'],
   install_requires=[],
   package_dir={'': '.'},
