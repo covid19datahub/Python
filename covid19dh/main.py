@@ -19,6 +19,17 @@ files = {
     3: 'data-3.csv'
 }
 
+def parseDate(dt):
+    if isinstance(dt, datetime.date):
+        return datetime.datetime(dt.year, dt.month, dt.day)
+    if isinstance(dt, str):
+        try:
+            return datetime.datetime.strptime(dt, "%Y-%m-%d")
+        except:
+            print("Invalid time format.", file=sys.stderr)
+            raise
+    return dt
+
 def covid19(country = None,
             level   = 1,
             start   = datetime.date(2019,1,1),
@@ -31,11 +42,11 @@ def covid19(country = None,
     # parse arguments
     country = country.upper() if country is not None else None
     end = datetime.datetime.now() if end is None else end
-    if isinstance(end, datetime.date):
-        end = datetime.datetime(end.year, end.month, end.day)
-    if isinstance(start, datetime.date):
-        start = datetime.datetime(start.year, start.month, start.day)
-    
+    try:
+        end = parseDate(end)
+        start = parseDate(start)
+    except:
+        return None
     # get url from level
     try:
         url = URLs[level]
