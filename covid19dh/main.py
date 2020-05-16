@@ -39,10 +39,10 @@ def covid19(country = None,
             level   = 1,
             start   = datetime.date(2019,1,1),
             end     = None, # defaultly today
-            # TODO
-            raw     = False,
-            vintage = False,
-            cache   = True):
+            cache   = True,
+            # will not be done unless architecture changed
+            raw     = False, 
+            vintage = True):
     # parse arguments
     country = country.upper() if country is not None else None
     end = datetime.datetime.now() if end is None else end
@@ -52,12 +52,15 @@ def covid19(country = None,
     except:
         return None
     if level not in {1,2,3}:
-        print("valid options for 'level' are:\n\t1: country-level data\n\t2: state-level data\n\t3: city-level data")
+        warnings.warn("valid options for 'level' are:\n\t1: country-level data\n\t2: state-level data\n\t3: city-level data")
         return None
+    if raw:
+        warnings.warn("raw data not available for covid19dh, fetching precleaned vintage", category=ResourceWarning)
+    if not vintage:
+        warnings.warn("only vintage data available for covid19dh, fetching vintage", category=ResourceWarning)
     
     # cache
     if cache is True and cached[level] is not None:
-        print("Using cached data.")
         df = cached[level]
     else:
         # get url from level
@@ -65,7 +68,7 @@ def covid19(country = None,
             url = URLs[level]
             filename = files[level]
         except KeyError:
-            print("Invalid level.", file=sys.stderr)
+            warnings.warn("invalid level")
             return None
         # download
         response = requests.get(url)
