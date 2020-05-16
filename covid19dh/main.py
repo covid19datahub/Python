@@ -18,6 +18,11 @@ files = {
     2: 'data-2.csv',
     3: 'data-3.csv'
 }
+cached = {
+    1: None,
+    2: None,
+    3: None
+}
 
 def parseDate(dt):
     if isinstance(dt, datetime.date):
@@ -37,7 +42,6 @@ def covid19(country = None,
             # TODO
             raw     = False,
             vintage = False,
-            verbose = True,
             cache   = True):
     # parse arguments
     country = country.upper() if country is not None else None
@@ -47,22 +51,33 @@ def covid19(country = None,
         start = parseDate(start)
     except:
         return None
-    # get url from level
-    try:
-        url = URLs[level]
-        filename = files[level]
-    except KeyError:
-        print("Invalid level.", file=sys.stderr)
+    if level not in {1,2,3}:
+        print("valid options for 'level' are:\n\t1: country-level data\n\t2: state-level data\n\t3: city-level data")
         return None
-    # download
-    response = requests.get(url)
-    # parse
-    with zipfile.ZipFile( BytesIO(response.content) ) as zz:
-        with zz.open(filename) as fd:
-            df = pd.read_csv( fd )
-    # cast columns
-    df['date'] = df['date'].apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d"))
     
+    # cache
+    if cache is True and cached[level] is not None:
+        print("Using cached data.")
+        df = cached[level]
+    else:
+        # get url from level
+        try:
+            url = URLs[level]
+            filename = files[level]
+        except KeyError:
+            print("Invalid level.", file=sys.stderr)
+            return None
+        # download
+        response = requests.get(url)
+        # parse
+        with zipfile.ZipFile( BytesIO(response.content) ) as zz:
+            with zz.open(filename) as fd:
+                df = pd.read_csv( fd, low_memory = False)
+        # cast columns
+        df['date'] = df['date'].apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d"))
+
+        cached[level] = df
+
     # filter
     if country is not None:
         # elementwise comparison works, but throws warning that it will be working better in the future
