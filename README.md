@@ -2,7 +2,7 @@
 
 # Python Interface to COVID-19 Data Hub
 
-Library [covid19dh](https://pypi.org/project/covid19dh/) helps Python users to fetch *COVID-19 Data Hub* data directly into Python.
+Python package [covid19dh](https://pypi.org/project/covid19dh/) simplifies fetching *COVID-19 Data Hub* data into Python.
 
 ## Setup and usage
 
@@ -18,6 +18,12 @@ Importing main `covid19()` function with
 from covid19dh import covid19
 
 x = covid19("ITA") # load data
+```
+
+Package is regularly updated. Update with
+
+```bash
+pip install --upgrade covid19dh
 ```
 
 ## Parametrization
@@ -79,5 +85,14 @@ Caching can be disabled (e.g. for long running programs) by
 ```python
 x = covid19("FRA", cache=False)
 ```
+
+## Contribution
+
+Developed by [Martin Benes](https://github.com/martinbenes1996).
+
+The goal of [COVID-19 Data Hub](https://covid19datahub.io/) is to provide the research community with a unified data hub by collecting worldwide fine-grained case data, merged with exogenous variables helpful for a better understanding of COVID-19.
+
+Join us on [GitHub](https://github.com/covid19datahub/Python).
+
 
 
