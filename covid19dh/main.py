@@ -9,6 +9,8 @@ import zipfile
 import pandas as pd
 import requests
 
+from .cite import cite
+
 URLs = {
     1: 'https://storage.covid19datahub.io/data-1.zip',
     2: 'https://storage.covid19datahub.io/data-2.zip',
@@ -129,6 +131,7 @@ def covid19(country = None,
     df = df.sort_values(by=["id","date"])
     
     if verbose:
+        sources = cite()
         warnings.warn("cite printing not implemented yet", category=FutureWarning)
     
     return df
