@@ -1,3 +1,5 @@
+<a href="https://covid19datahub.io"><img src="https://storage.covid19datahub.io/logo.svg" align="right" height="128"/></a>
+
 # Python Interface to COVID-19 Data Hub
 
 Python csv parser `csv.reader()` does not seem to parse the csv well,
