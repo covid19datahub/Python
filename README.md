@@ -2,32 +2,59 @@
 
 # Python Interface to COVID-19 Data Hub
 
-Python csv parser `csv.reader()` does not seem to parse the csv well,
-since it cannot work with the quotation marks around strings.
+Library [covid19dh](https://pypi.org/project/covid19dh/) helps Python users to fetch *COVID-19 Data Hub* data directly into Python.
 
-However `read_csv()` from [pandas](https://pandas.pydata.org/) is processing it fine.
+## Setup and usage
 
-To make a successful call, you also have to specify `User-Agent` header, see [here](https://datascience.stackexchange.com/questions/49751/read-csv-file-directly-from-url-how-to-fix-a-403-forbidden-error), the request is hence sent separately using [requests](https://requests.readthedocs.io/en/master/) library.
-
-Install `pandas` and `requests` by typing into terminal:
-
-```bash
-pip install pandas requests
-```
-
-Once installed, fetch the data:
+Install with
 
 ```python
-# standard library
-from io import StringIO
-# nonstandard - download separately
-import pandas as pd # Pandas
-import requests # HTTP Request library
-# download
-url = "https://storage.covid19datahub.io/data-1.csv"
-response = requests.get(url, headers = {"User-Agent": "Mozilla/5.0"})
-# make response iterable string
-data = StringIO(response.text)
-# load into pandas
-df = pd.read_csv(data)
+pip install covid19dh
 ```
+
+Importing main `covid19()` function with 
+
+```python
+from covid19dh import covid19
+
+x = covid19("ITA") # load data
+```
+
+## Parametrization
+
+### Date filter
+
+Date can be specified with `datetime.datetime`, `datetime.date`
+or as a `str` in format `YYYY-mm-dd`.
+
+```python
+from datetime import datetime
+
+x = covid19("SWE", start = datetime(2020,4,1), end = "2020-05-01")
+```
+
+### Level
+
+Levels work the same way as in all the other our data fetchers.
+
+1. Country level
+2. State, region or canton level
+3. City or municipality level
+
+```python
+from datetime import date
+
+x = covid19("USA", level = 2, start = date(2020,5,1))
+```
+
+### Cache
+
+Library keeps downloaded data in simple way during runtime. By default, using the cached data is enabled.
+
+Caching can be disabled (e.g. for long running programs) by
+
+```python
+x = covid19("FRA", cache=False)
+```
+
+
