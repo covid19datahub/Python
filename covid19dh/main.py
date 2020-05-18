@@ -43,8 +43,26 @@ def covid19(country = None,
             # will not be done unless architecture changed
             raw     = False, 
             vintage = True):
+    """Main function for module. Fetches data from hub.
+    
+    Args:
+        country (str, optional): ISO country code, defaultly all countries
+        level (int, optional): level of data, default 1
+            * country-level (1)
+            * state-level (2)
+            * city-level (3)
+        start (datetime | date | str, optional): start date of data (as str in format [%Y-%m-%d]),
+                                                 default 2019-01-01
+        end (datetime | date | str, optional): end date of data (as str in format [%Y-%m-%d]),
+                                               default today (sysdate)
+        cache (bool, optional): use cached data if available, default yes
+        raw (bool, optional): do not perform cleansing, not available in Python covid19dh (precleansed data used)
+        vintage (bool, optional): use hub data (True) or original source, not available in Python covid19dh (only hub)
+    """
     # parse arguments
-    country = country.upper() if country is not None else None
+    if country is not None:
+        country = [country] if isinstance(country, str) else country
+        country = [c.upper() for c in country]
     end = datetime.datetime.now() if end is None else end
     try:
         end = parseDate(end)
@@ -53,6 +71,9 @@ def covid19(country = None,
         return None
     if level not in {1,2,3}:
         warnings.warn("valid options for 'level' are:\n\t1: country-level data\n\t2: state-level data\n\t3: city-level data")
+        return None
+    if start > end:
+        warnings.warn("start is later than end")
         return None
     if raw:
         warnings.warn("raw data not available for covid19dh, fetching precleaned vintage", category=ResourceWarning)
@@ -87,13 +108,20 @@ def covid19(country = None,
         # no idea why, but I found solution to mute it as follows
         with warnings.catch_warnings():
             warnings.simplefilter(action='ignore', category=FutureWarning)
-            df = df[(df['iso_alpha_3'] == country) |
-                    (df['iso_alpha_2'] == country) |
-                    (df['iso_numeric'] == country)   ]
+            df = df[(df['iso_alpha_3'].isin(country)) |
+                    (df['iso_alpha_2'].isin(country)) |
+                    (df['iso_numeric'].isin(country))   ]
     if start is not None:
         df = df[df['date'] >= start]
     if end is not None:
         df = df[df['date'] <= end]
+    
+    # detect empty
+    if df.empty:
+        warnings.warn("no data for given settings", category=ResourceWarning)
+        return None
+    # sort
+    df = df.sort_values(by="date")
     
     return df
 
