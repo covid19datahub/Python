@@ -45,7 +45,7 @@ List of ISO codes can be found [https://github.com/martinbenes1996/COVID19/blob/
 Filter can also specify multiple countries at the same time
 
 ```python
-x = covid19(["ESP","PRT","AND"])
+x = covid19(["ESP","PT","andorra",250])
 ```
 
 Country can be omitted, then whole world data is used.

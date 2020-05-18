@@ -62,7 +62,7 @@ def covid19(country = None,
     # parse arguments
     if country is not None:
         country = [country] if isinstance(country, str) else country
-        country = [c.upper() for c in country]
+        country = [c.upper() if isinstance(c,str) else c for c in country]
     end = datetime.datetime.now() if end is None else end
     try:
         end = parseDate(end)
