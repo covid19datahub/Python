@@ -22,6 +22,29 @@ x = covid19("ITA") # load data
 
 ## Parametrization
 
+### Country
+
+Country specifies an administrative region, that the data are fetched from.
+This is connected with source data comes from.
+
+Fetching data from a particular country is done with
+
+```python
+x = covid19("ESP")
+```
+
+Filter can also specify multiple countries at the same time
+
+```python
+x = covid19(["ESP","PRT","AND"])
+```
+
+Country can be omitted, then whole world data is used.
+
+```python
+x = covid19()
+```
+
 ### Date filter
 
 Date can be specified with `datetime.datetime`, `datetime.date`
