@@ -40,7 +40,7 @@ Fetching data from a particular country is done with
 x = covid19("ESP")
 ```
 
-List of ISO codes can be found [https://github.com/martinbenes1996/COVID19/blob/swe/inst/extdata/db/ISO.csv](here).
+List of ISO codes can be found [here](https://github.com/martinbenes1996/COVID19/blob/swe/inst/extdata/db/ISO.csv).
 
 Filter can also specify multiple countries at the same time
 
