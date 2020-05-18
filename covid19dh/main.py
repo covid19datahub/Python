@@ -110,7 +110,8 @@ def covid19(country = None,
             warnings.simplefilter(action='ignore', category=FutureWarning)
             df = df[(df['iso_alpha_3'].isin(country)) |
                     (df['iso_alpha_2'].isin(country)) |
-                    (df['iso_numeric'].isin(country))   ]
+                    (df['iso_numeric'].isin(country)) |
+                    (df['administrative_area_level_1'].map(lambda s: s.upper()).isin(country))  ]
     if start is not None:
         df = df[df['date'] >= start]
     if end is not None:

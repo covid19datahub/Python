@@ -31,13 +31,16 @@ pip install --upgrade covid19dh
 ### Country
 
 Country specifies an administrative region, that the data are fetched from.
-This is connected with source data comes from.
+This is connected with source data comes from. It can be given as
+ISO3, ISO2, numeric ISO or country name (case-insensitively). 
 
 Fetching data from a particular country is done with
 
 ```python
 x = covid19("ESP")
 ```
+
+List of ISO codes can be found [https://github.com/martinbenes1996/COVID19/blob/swe/inst/extdata/db/ISO.csv](here).
 
 Filter can also specify multiple countries at the same time
 
