@@ -1,6 +1,7 @@
 
 import datetime
 from io import StringIO,BytesIO
+import math
 import sys
 import warnings
 import zipfile
@@ -40,6 +41,7 @@ def covid19(country = None,
             start   = datetime.date(2019,1,1),
             end     = None, # defaultly today
             cache   = True,
+            verbose = False,
             # will not be done unless architecture changed
             raw     = False, 
             vintage = True):
@@ -56,6 +58,7 @@ def covid19(country = None,
         end (datetime | date | str, optional): end date of data (as str in format [%Y-%m-%d]),
                                                default today (sysdate)
         cache (bool, optional): use cached data if available, default yes
+        verbose (bool, optional): print sources, not implemented yet, default false (possibly true in future)
         raw (bool, optional): do not perform cleansing, not available in Python covid19dh (precleansed data used)
         vintage (bool, optional): use hub data (True) or original source, not available in Python covid19dh (only hub)
     """
@@ -99,6 +102,7 @@ def covid19(country = None,
                 df = pd.read_csv( fd, low_memory = False)
         # cast columns
         df['date'] = df['date'].apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d"))
+        df['iso_numeric'] = df['iso_numeric'].apply(lambda x: float(x))
 
         cached[level] = df
 
@@ -122,7 +126,10 @@ def covid19(country = None,
         warnings.warn("no data for given settings", category=ResourceWarning)
         return None
     # sort
-    df = df.sort_values(by="date")
+    df = df.sort_values(by=["id","date"])
+    
+    if verbose:
+        warnings.warn("cite printing not implemented yet", category=FutureWarning)
     
     return df
 
