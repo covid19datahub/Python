@@ -43,7 +43,7 @@ def covid19(country = None,
             start   = datetime.date(2019,1,1),
             end     = None, # defaultly today
             cache   = True,
-            verbose = False,
+            verbose = True,
             # will not be done unless architecture changed
             raw     = False, 
             vintage = True):
@@ -60,7 +60,7 @@ def covid19(country = None,
         end (datetime | date | str, optional): end date of data (as str in format [%Y-%m-%d]),
                                                default today (sysdate)
         cache (bool, optional): use cached data if available, default yes
-        verbose (bool, optional): print sources, not implemented yet, default false (possibly true in future)
+        verbose (bool, optional): prints sources, default true
         raw (bool, optional): do not perform cleansing, not available in Python covid19dh (precleansed data used)
         vintage (bool, optional): use hub data (True) or original source, not available in Python covid19dh (only hub)
     """
@@ -131,8 +131,10 @@ def covid19(country = None,
     df = df.sort_values(by=["id","date"])
     
     if verbose:
-        sources = cite()
-        warnings.warn("cite printing not implemented yet", category=FutureWarning)
+        sources = cite(df)
+        print("\n", end="")
+        for source in sources:
+            print(source, end="\n\n")
     
     return df
 
