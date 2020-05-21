@@ -1,14 +1,17 @@
 
+from io import StringIO
 import math
+import re
 import warnings
 
 import pandas as pd
 import requests
 
-def cite(x):
+def cite(x, raw = False):
     # get sources
-    url = 'https://raw.githubusercontent.com/covid19datahub/COVID19/master/inst/extdata/src.csv'
-    sources = pd.read_csv(url)
+    url = 'https://storage.covid19datahub.io/src.csv'
+    response = requests.get(url) # headers={'User-Agent': 'Mozilla/5.0'}
+    sources = pd.read_csv( StringIO(response.text))
     
     # transform data
     isos = set(x["iso_alpha_3"].unique())
@@ -20,6 +23,9 @@ def cite(x):
     sources = sources[sources["iso_alpha_3"].isin(isos) & sources["data_type"].isin(params)]
     unique_sources = sources.fillna("").groupby(["title","author","year","institution","url","textVersion","bibtype"])
 
+    if raw:
+        return unique_sources.count().reset_index()
+    
     # turn references into citations
     citations = []
     for n,g in unique_sources:
@@ -31,8 +37,7 @@ def cite(x):
         if not year:
             warnings.warn("reference does not specify year, omitting")
             continue
-        refinfo = [bool(title),bool(author),bool(year),bool(institution),bool(url),bool(textVersion)]
-        
+
         if textVersion:
             citation = textVersion
         else:
@@ -52,6 +57,8 @@ def cite(x):
             if url:
                 if post:
                     post += ", "
+                url = re.sub(r"(http://|https://|www\\.)([^/]+)(.*)",
+                             r"\1\2/", url)
                 post += f"{url}"
             else:
                 post += "."

@@ -118,10 +118,49 @@ Guidotti, E., Ardia, D., (2020), "COVID-19 Data Hub", Working paper, doi: 10.131
 
 This feature can be turned off by setting `verbose` to `False`.
 
-``` python
+```python
 from covid19dh import covid19
 x = covid19("CZE", verbose = False) 
 ```
+
+You can separately get the reference data or the string citations as
+
+```python
+from covid19dh import covid19,cite
+x = covid19("ITA")
+refs = cite(x, raw=True)
+citations = cite(x)
+```
+
+Pandas dataframe `refs` has following structure
+
+```
+                                               title                                             author  year                     institution  ... bibtype iso_alpha_3 administrative_area_level  data_type
+0                           Czech Statistical Office                                                     2018                                  ...                   1                         1          1
+1  Johns Hopkins Center for Systems Science and E...                                                     2020                                  ...                   5                         5          5
+2              Ministery of Health of Czech Republic                                                     2020                                  ...                   2                         2          2
+3                                  Our World in Data                                                     2020                                  ...                   1                         1          1
+4        Oxford COVID-19 Government Response Tracker  Hale Thomas, Sam Webster, Anna Petherick, Toby...  2020  Blavatnik School of Government  ...                  10                        10         10
+5                               World Bank Open Data                                                     2018                                  ...                   1                         1          1
+
+[6 rows x 10 columns]
+```
+
+List `citations` is equal to
+
+```python
+[
+    'Czech Statistical Office (2018), https://www.czso.cz/csu/czso/demograficka-rocenka-kraju-2009-az-2018',
+    'Johns Hopkins Center for Systems Science and Engineering (2020), https://github.com/CSSEGISandData/COVID-19',
+    'Ministery of Health of Czech Republic (2020), https://onemocneni-aktualne.mzcr.cz/',
+    'Our World in Data (2020), https://github.com/owid/covid-19-data',
+    'Hale Thomas, Sam Webster, Anna Petherick, Toby Phillips, and Beatriz Kira (2020). Oxford COVID-19 Government Response Tracker, Blavatnik School of Government.',
+    'World Bank Open Data (2018), https://data.worldbank.org/indicator/SP.POP.TOTL',
+    'Guidotti, E., Ardia, D., (2020), "COVID-19 Data Hub", Working paper, doi: 10.13140/RG.2.2.11649.81763.'
+]
+```
+
+
 
 ## Contribution
 

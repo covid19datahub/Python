@@ -97,7 +97,7 @@ def covid19(country = None,
             warnings.warn("invalid level")
             return None
         # download
-        response = requests.get(url)
+        response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
         # parse
         with zipfile.ZipFile( BytesIO(response.content) ) as zz:
             with zz.open(filename) as fd:
@@ -135,6 +135,7 @@ def covid19(country = None,
         print("\n", end="")
         for source in sources:
             print(source, end="\n\n")
+        print("To hide the data sources use 'verbose = FALSE'.")
     
     return df
 
