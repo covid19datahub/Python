@@ -19,7 +19,7 @@ setuptools.setup(
   install_requires=[],
   package_dir={'': '.'},
   classifiers=[
-    'Development Status :: 3 - Alpha',
+    'Development Status :: 4 - Beta',
     'Intended Audience :: Science/Research',
     'Intended Audience :: Developers',
     'Intended Audience :: Other Audience',
