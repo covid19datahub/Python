@@ -132,10 +132,10 @@ def covid19(country = None,
     
     if verbose:
         sources = cite(df)
-        print("\n", end="")
+        print("\033[1mData References:\033[0m\n", end="")
         for source in sources:
-            print(source, end="\n\n")
-        print("To hide the data sources use 'verbose = FALSE'.")
+            print("\t" + source, end="\n\n")
+        print("\033[33mTo hide the data sources use 'verbose = FALSE'.\033[0m")
     
     return df
 
