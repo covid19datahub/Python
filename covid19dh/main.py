@@ -100,7 +100,15 @@ def covid19(country = None,
             warnings.warn("invalid level")
             return None
         # download
-        response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+        try:
+            response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+        except:
+            if vintage:
+                warnings.warn("vintage data not available yet")
+                return None
+            else:
+                warnings.warn("error to fetch data")
+                return None
         # parse
         with zipfile.ZipFile( BytesIO(response.content) ) as zz:
             with zz.open(filename) as fd:

@@ -91,6 +91,39 @@ Caching can be disabled (e.g. for long running programs) by
 x = covid19("FRA", cache=False)
 ```
 
+Caching is dependent on level, vintage parameter and 
+
+### Vintage
+
+Data Hub enables to fetch the vintage data, data archive collected at each data. The data collectiong is stable.
+
+To fetch e.g. US data that were accessible on *10th April 2020* type
+
+```python
+x = covid19("USA", end = "2020-04-10", vintage = True)
+```
+
+The vintage data are collected at the end of the day, but published with approximately 48 hour delay,
+once the day is completed in all the timezones.
+
+Hence if `vintage = True`, but `end` is not set, warning is raised and `None` is returned.
+
+```python
+x = covid19("USA", vintage=True) # too early to get today's vintage
+```
+
+```
+UserWarning: vintage data not available yet
+```
+
+### Raw
+
+You can also get the raw data, that no cleansing operation has been performed on. Type
+
+```python
+x = covid19("USA", raw=True)
+```
+
 ### Citations
 
 Dataset [citations](https://github.com/covid19datahub/COVID19/blob/master/inst/extdata/src.csv) are printed by default on `stdout`.
