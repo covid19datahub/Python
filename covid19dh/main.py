@@ -11,16 +11,34 @@ import requests
 
 from .cite import cite
 
-URLs = {
-    1: 'https://storage.covid19datahub.io/data-1.zip',
-    2: 'https://storage.covid19datahub.io/data-2.zip',
-    3: 'https://storage.covid19datahub.io/data-3.zip'
-}
-files = {
-    1: 'data-1.csv',
-    2: 'data-2.csv',
-    3: 'data-3.csv'
-}
+def get_url(level, dt, raw, vintage):
+    # dataname
+    rawprefix = "raw" if raw else ""
+    dataname = f"{rawprefix}data-{level}"
+    # vintage
+    if vintage:
+        # too new
+        if dt >= datetime.datetime.now() - datetime.timedelta(days = 2):
+            warnings.warn("vintage data not available yet")
+            return None,None
+        dt_str = dt.strftime("%Y-%m-%d")
+        filename = f"{ dt_str }.zip"
+    # current data
+    else:
+        filename = f"{dataname}.zip"
+    # url, filename
+    return f"https://storage.covid19datahub.io/{filename}", f"{dataname}.csv"
+        
+#URLs = {
+#    1: 'https://storage.covid19datahub.io/data-1.zip',
+#    2: 'https://storage.covid19datahub.io/data-2.zip',
+#    3: 'https://storage.covid19datahub.io/data-3.zip'
+#}
+#files = {
+#    1: 'data-1.csv',
+#    2: 'data-2.csv',
+#    3: 'data-3.csv'
+#}
 cached = {
     1: None,
     2: None,
@@ -46,7 +64,7 @@ def covid19(country = None,
             verbose = True,
             # will not be done unless architecture changed
             raw     = False, 
-            vintage = True):
+            vintage = False):
     """Main function for module. Fetches data from hub.
     
     Args:
@@ -91,8 +109,9 @@ def covid19(country = None,
     else:
         # get url from level
         try:
-            url = URLs[level]
-            filename = files[level]
+            url,filename = get_url(level = level, dt = end, raw = raw, vintage = vintage)
+            if url is None:
+                return None
         except KeyError:
             warnings.warn("invalid level")
             return None
