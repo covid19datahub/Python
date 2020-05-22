@@ -10,6 +10,7 @@ import pandas as pd
 import requests
 
 from .cite import cite
+from .cache import *
 
 def get_url(level, dt, raw, vintage):
     # dataname
@@ -28,22 +29,6 @@ def get_url(level, dt, raw, vintage):
         filename = f"{dataname}.zip"
     # url, filename
     return f"https://storage.covid19datahub.io/{filename}", f"{dataname}.csv"
-        
-#URLs = {
-#    1: 'https://storage.covid19datahub.io/data-1.zip',
-#    2: 'https://storage.covid19datahub.io/data-2.zip',
-#    3: 'https://storage.covid19datahub.io/data-3.zip'
-#}
-#files = {
-#    1: 'data-1.csv',
-#    2: 'data-2.csv',
-#    3: 'data-3.csv'
-#}
-cached = {
-    1: None,
-    2: None,
-    3: None
-}
 
 def parseDate(dt):
     if isinstance(dt, datetime.date):
@@ -62,7 +47,6 @@ def covid19(country = None,
             end     = None, # defaultly today
             cache   = True,
             verbose = True,
-            # will not be done unless architecture changed
             raw     = False, 
             vintage = False):
     """Main function for module. Fetches data from hub.
@@ -79,7 +63,7 @@ def covid19(country = None,
                                                default today (sysdate)
         cache (bool, optional): use cached data if available, default yes
         verbose (bool, optional): prints sources, default true
-        raw (bool, optional): do not perform cleansing, not available in Python covid19dh (precleansed data used)
+        raw (bool, optional): download not cleansed data, defaultly using cleansed
         vintage (bool, optional): use hub data (True) or original source, not available in Python covid19dh (only hub)
     """
     # parse arguments
@@ -104,9 +88,9 @@ def covid19(country = None,
         warnings.warn("only vintage data available for covid19dh, fetching vintage", category=ResourceWarning)
     
     # cache
-    if cache is True and cached[level] is not None:
-        df = cached[level]
-    else:
+    df = read_cache(level, end, raw, vintage)
+    
+    if cache is False or df is None:
         # get url from level
         try:
             url,filename = get_url(level = level, dt = end, raw = raw, vintage = vintage)
@@ -125,7 +109,7 @@ def covid19(country = None,
         df['date'] = df['date'].apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d"))
         df['iso_numeric'] = df['iso_numeric'].apply(lambda x: float(x))
 
-        cached[level] = df
+        write_cache(df, level, end, raw, vintage)
 
     # filter
     if country is not None:
@@ -154,7 +138,7 @@ def covid19(country = None,
         print("\033[1mData References:\033[0m\n", end="")
         for source in sources:
             print("\t" + source, end="\n\n")
-        print("\033[33mTo hide the data sources use 'verbose = FALSE'.\033[0m")
+        print("\033[33mTo hide the data sources use 'verbose = False'.\033[0m")
     
     return df
 
