@@ -2,6 +2,8 @@
 
 # Python Interface to COVID-19 Data Hub
 
+[![](https://img.shields.io/pypi/v/covid19dh.svg?color=brightgreen)](https://pypi.org/pypi/covid19dh/) [![](https://img.shields.io/pypi/dm/covid19dh.svg?color=blue)](https://pypi.org/pypi/covid19dh/) [![](https://img.shields.io/badge/doi-10.13140/RG.2.2.11649.81763-orange.svg)](https://doi.org/10.13140/RG.2.2.11649.81763)
+
 Python package [covid19dh](https://covid19datahub.io/) provides access to COVID-19 data from unified data hub.
 
 It is part of *COVID-19 Data Hub* project.
