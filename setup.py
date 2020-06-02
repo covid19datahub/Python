@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="UTF-8") as fh:
 
 setuptools.setup(
   name = 'covid19dh',
-  version = '0.2.2',
+  version = '1.0.0',
   author = 'Covid-19 Data Hub',
   author_email = 'martinbenes1996@gmail.com',
   description = 'Unified data hub for a better understanding of COVID-19 https://covid19datahub.io',
@@ -14,12 +14,12 @@ setuptools.setup(
   packages=setuptools.find_packages(),
   license='GPL',
   url = 'https://www.covid19datahub.io/',
-  download_url = 'https://github.com/covid19datahub/Python/archive/0.2.2.tar.gz',
+  download_url = 'https://github.com/covid19datahub/Python/archive/1.0.0.tar.gz',
   keywords = ['2019-nCov', 'coronavirus', 'covid-19', 'covid-data', 'covid19-data'],
   install_requires=[],
   package_dir={'': '.'},
   classifiers=[
-    'Development Status :: 4 - Beta',
+    'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Science/Research',
     'Intended Audience :: Developers',
     'Intended Audience :: Other Audience',
