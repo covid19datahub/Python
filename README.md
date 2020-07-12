@@ -4,9 +4,14 @@
 
 [![](https://img.shields.io/pypi/v/covid19dh.svg?color=brightgreen)](https://pypi.org/pypi/covid19dh/) [![](https://img.shields.io/pypi/dm/covid19dh.svg?color=blue)](https://pypi.org/pypi/covid19dh/) [![DOI](https://joss.theoj.org/papers/10.21105/joss.02376/status.svg)](https://doi.org/10.21105/joss.02376)
 
-Python package [covid19dh](https://covid19datahub.io/) provides access to COVID-19 data from unified data hub.
+The goal of COVID-19 Data Hub is to provide the research community with a [unified dataset](https://covid19datahub.io/articles/data.html) by collecting worldwide fine-grained case data, merged with exogenous variables helpful for a better understanding of COVID-19. Please agree to the [Terms of Use](https://covid19datahub.io/LICENSE.html) and cite the following reference when using it:
 
-It is part of *COVID-19 Data Hub* project.
+**Reference**
+
+Guidotti, E., Ardia, D., (2020).
+COVID-19 Data Hub
+*Journal of Open Source Software*, **5**(51):2376
+<https://doi.org/10.21105/joss.02376>
 
 ## Setup and usage
 
@@ -92,8 +97,6 @@ Caching can be disabled (e.g. for long running programs) by
 ```python
 x = covid19("FRA", cache=False)
 ```
-
-Caching is dependent on level, vintage parameter and 
 
 ### Vintage
 
@@ -199,11 +202,5 @@ List `citations` is equal to
 
 ## Contribution
 
-Developed by [Martin Benes](https://github.com/martinbenes1996).
-
-The goal of [COVID-19 Data Hub](https://covid19datahub.io/) is to provide the research community with a unified data hub by collecting worldwide fine-grained case data, merged with exogenous variables helpful for a better understanding of COVID-19.
-
-Join us on [GitHub](https://github.com/covid19datahub/Python).
-
-
+Developed by [Martin Benes](https://github.com/martinbenes1996)
 
