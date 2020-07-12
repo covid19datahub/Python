@@ -8,10 +8,10 @@ The goal of COVID-19 Data Hub is to provide the research community with a [unifi
 
 **Reference**
 
-Guidotti, E., Ardia, D., (2020).
-COVID-19 Data Hub
-*Journal of Open Source Software*, **5**(51):2376
-<https://doi.org/10.21105/joss.02376>
+Guidotti, E., Ardia, D., (2020).      
+COVID-19 Data Hub       
+_Journal of Open Source Software_, **5**(51):2376   
+[https://doi.org/10.21105/joss.02376](https://doi.org/10.21105/joss.02376)  
 
 ## Setup and usage
 
