@@ -1,5 +1,6 @@
 
 import setuptools
+
 with open("README.md", "r", encoding="UTF-8") as fh:
     long_description = fh.read()
 
@@ -16,7 +17,10 @@ setuptools.setup(
   url = 'https://www.covid19datahub.io/',
   download_url = 'https://github.com/covid19datahub/Python/archive/1.0.0.tar.gz',
   keywords = ['2019-nCov', 'coronavirus', 'covid-19', 'covid-data', 'covid19-data'],
-  install_requires=[],
+  install_requires=[
+    'pandas',
+    'requests',
+  ],
   package_dir={'': '.'},
   classifiers=[
     'Development Status :: 5 - Production/Stable',
