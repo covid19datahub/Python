@@ -4,7 +4,7 @@ import unittest
 sys.path.append(".")
 
 # === unit tests ===
-from test_main import *
+from test_covid19 import *
 # ==================
 
 
