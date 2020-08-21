@@ -37,8 +37,7 @@ jobs:
     # Runs a single command using the runners shell
     - name: debug - list directory
       run:
-        ls
-        ls covid19dh; true
+        ls; true
     
     # Runs a single command using the runners shell
     - name: Run unittests
