@@ -46,12 +46,12 @@ def cite(x, sources):
             #(title,author,institution,url,textVersion,bibtype) = n
             #year = g.year.max()
         
-            if not author and not title:
-                warnings.warn("reference does not specify author nor title, omitting")
-                continue
-            if not year:
-                warnings.warn("reference does not specify year, omitting")
-                continue
+            #if not author and not title:
+            #    warnings.warn("reference does not specify author nor title, omitting")
+            #    continue
+            #if not year:
+            #    warnings.warn("reference does not specify year, omitting")
+            #    continue
 
             if textVersion:
                 citation = textVersion
