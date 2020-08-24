@@ -152,7 +152,7 @@ def covid19(country = None,
     # sort
     df = df.sort_values(by=["id","date"])
     
-    src,refs = cite(df, src)
+    src = cite(df, src)
     if verbose:
         
         message = "We have invested a lot of time and effort in creating COVID-19 Data Hub, please cite the following when using it:\n\n"
