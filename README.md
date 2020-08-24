@@ -131,8 +131,8 @@ UserWarning: vintage data not available yet
 
 ### Citations
 
-Sources to data is returned as a second value. Apart from that
-aggregated [citations](https://github.com/covid19datahub/COVID19/blob/master/inst/extdata/src.csv) are printed to `stdout` by default.
+Sources to data is returned as a second value. 
+<!--Apart from that aggregated [citations](https://github.com/covid19datahub/COVID19/blob/master/inst/extdata/src.csv) are printed to `stdout` by default.-->
 
 ```python
 from covid19dh import covid19
@@ -167,16 +167,17 @@ from covid19dh import covid19
 x,src = covid19("CZE", verbose = False) 
 ```
 
-You can work with citations even separately. Feed the `cite()` function
-with the data and the sources object to get the message to be printed.
+A data sources can be acquired from full sources using `cite()`, filtering only the relevant sources.
 
 ```python
-from covid19dh import covid19,cite
-x,src = covid19("ITA")
-src,refs = cite(x, src)
+from covid19dh import covid19,cite,get_sources
+x,_ = covid19("ITA") # fetch data
+
+src_all = get_sources() # get all sources
+src_in_x = cite(x, src_all) # filter sources for x
 ```
 
-Except for constructing the textual references out of pandas dataframe of sources, `cite()` also filters out sources that are not used in the data, in example both `src` objects should be equal, since `covid19()` returns already filtered sources. 
+<!--Except for constructing the textual references out of pandas dataframe of sources, `cite()` also filters out sources that are not used in the data, in example both `src` objects should be equal, since `covid19()` returns already filtered sources.-->
 
 Pandas dataframe `src` has following structure
 
@@ -218,6 +219,7 @@ Dataframe columns are
 * *year*
 * *bibtype*, *textVersion*
 
+<!--
 List `refs` is equal to
 
 ```python
@@ -231,6 +233,7 @@ List `refs` is equal to
     'Guidotti, E., Ardia, D., (2020), "COVID-19 Data Hub", Working paper, doi: 10.13140/RG.2.2.11649.81763.'
 ]
 ```
+-->
 
 ## Contribution
 

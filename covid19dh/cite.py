@@ -82,6 +82,6 @@ def cite(x, sources):
             citations.append(citation)
     
     #citations.append("Guidotti, E., Ardia, D., (2020), \"COVID-19 Data Hub\", Working paper, doi: 10.13140/RG.2.2.11649.81763.")
-    return sources, citations
+    return sources#, citations
 
 __all__ = ["cite","get_sources"]
