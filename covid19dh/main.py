@@ -9,13 +9,12 @@ import zipfile
 import pandas as pd
 import requests
 
-from .cite import cite
+from .cite import *
 from .cache import *
 
-def get_url(level, dt, raw, vintage):
+def get_url(level, dt, vintage):
     # dataname
-    rawprefix = "raw" if raw else ""
-    dataname = f"{rawprefix}data-{level}"
+    dataname = f"data-{level}"
     # vintage
     if vintage:
         # too new
@@ -47,7 +46,7 @@ def covid19(country = None,
             end     = None, # defaultly today
             cache   = True,
             verbose = True,
-            raw     = False, 
+            raw     = False,
             vintage = False):
     """Main function for module. Fetches data from hub.
     
@@ -83,17 +82,16 @@ def covid19(country = None,
         warnings.warn("start is later than end")
         return None
     if raw:
-        warnings.warn("raw data not available for covid19dh, fetching precleaned vintage", category=ResourceWarning)
-    if not vintage:
-        warnings.warn("only vintage data available for covid19dh, fetching vintage", category=ResourceWarning)
-    
+        warnings.warn("parameter raw is deprecated, using cleansed data", category=DeprecationWarning)
+        
     # cache
-    df = read_cache(level, end, raw, vintage)
+    df = read_cache(level, end, vintage)
+    src = None
     
     if cache is False or df is None:
         # get url from level
         try:
-            url,filename = get_url(level = level, dt = end, raw = raw, vintage = vintage)
+            url,filename = get_url(level = level, dt = end, vintage = vintage)
             if url is None:
                 return None
         except KeyError:
@@ -113,12 +111,24 @@ def covid19(country = None,
         with zipfile.ZipFile( BytesIO(response.content) ) as zz:
             with zz.open(filename) as fd:
                 df = pd.read_csv( fd, low_memory = False)
+            # src from vintage archive
+            if vintage:
+                with zz.open("src.csv") as fd:
+                    src = pd.read_csv( fd, low_memory = False)
+                    write_src_cache(src, end, vintage)
         # cast columns
         df['date'] = df['date'].apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d"))
         df['iso_numeric'] = df['iso_numeric'].apply(lambda x: float(x))
 
-        write_cache(df, level, end, raw, vintage)
+        write_cache(df, level, end, vintage)
 
+    # src
+    if src is None:
+        src = read_src_cache(end, vintage)
+        if src is None:
+            src = get_sources()
+            write_src_cache(src, end, vintage)
+    
     # filter
     if country is not None:
         # elementwise comparison works, but throws warning that it will be working better in the future
@@ -141,13 +151,30 @@ def covid19(country = None,
     # sort
     df = df.sort_values(by=["id","date"])
     
+    src,refs = cite(df, src)
     if verbose:
-        sources = cite(df)
-        print("\033[1mData References:\033[0m\n", end="")
-        for source in sources:
-            print("\t" + source, end="\n\n")
-        print("\033[33mTo hide the data sources use 'verbose = False'.\033[0m")
+        
+        message = "We have invested a lot of time and effort in creating COVID-19 Data Hub, please cite the following when using it:\n\n"
+        message += "\t\033[1mGuidotti, E., Ardia, D., (2020), \"COVID-19 Data Hub\", Journal of Open Source Software 5(51):2376, doi: 10.21105/joss.02376.\033[0m\n\n"
+        message += "A BibTeX entry for LaTeX users is\n\n"
+        message += "\t@Article{,\n"
+        message += "\t\ttitle = {COVID-19 Data Hub},\n"
+        message += "\t\tyear = {2020},\n"
+        message += "\t\tdoi = {10.21105/joss.02376},\n"
+        message += "\t\tauthor = {Emanuele Guidotti and David Ardia},\n"
+        message += "\t\tjournal = {Journal of Open Source Software},\n"
+        message += "\t\tvolume = {5},\n"
+        message += "\t\tnumber = {51},\n"
+        message += "\t\tpages = {2376},\n"
+        message += "\t}\n\n"
+        message += "\033[33mTo hide this message use 'verbose = FALSE'.\033[0m"
+
+        print(message)
+        #print("\033[1mData References:\033[0m\n", end="")
+        #for ref in refs:
+        #    print("\t" + ref, end="\n\n")
+        #print("\033[33mTo hide the data sources use 'verbose = False'.\033[0m")
     
-    return df
+    return df,src
 
 __all__ = ["covid19"]

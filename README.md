@@ -26,7 +26,7 @@ Importing main `covid19()` function with
 ```python
 from covid19dh import covid19
 
-x = covid19("ITA") # load data
+x,src = covid19("ITA") # load data
 ```
 
 Package is regularly updated. Update with
@@ -34,6 +34,12 @@ Package is regularly updated. Update with
 ```bash
 pip install --upgrade covid19dh
 ```
+
+## Return values
+
+Call of `covid19()` returns in all cases 2 arguments, pandas dataframes,
+* the data and
+* references to the sources.
 
 ## Parametrization
 
@@ -46,7 +52,7 @@ ISO3, ISO2, numeric ISO or country name (case-insensitively).
 Fetching data from a particular country is done with
 
 ```python
-x = covid19("ESP")
+x,src = covid19("ESP")
 ```
 
 List of ISO codes can be found [here](https://github.com/covid19datahub/COVID19/blob/master/inst/extdata/src.csv).
@@ -54,13 +60,13 @@ List of ISO codes can be found [here](https://github.com/covid19datahub/COVID19/
 Filter can also specify multiple countries at the same time
 
 ```python
-x = covid19(["ESP","PT","andorra",250])
+x,src = covid19(["ESP","PT","andorra",250])
 ```
 
 Country can be omitted, then whole world data is used.
 
 ```python
-x = covid19()
+x,src = covid19()
 ```
 
 ### Date filter
@@ -71,7 +77,7 @@ or as a `str` in format `YYYY-mm-dd`.
 ```python
 from datetime import datetime
 
-x = covid19("SWE", start = datetime(2020,4,1), end = "2020-05-01")
+x,src = covid19("SWE", start = datetime(2020,4,1), end = "2020-05-01")
 ```
 
 ### Level
@@ -85,27 +91,29 @@ Levels work the same way as in all the other our data fetchers.
 ```python
 from datetime import date
 
-x = covid19("USA", level = 2, start = date(2020,5,1))
+x,src = covid19("USA", level = 2, start = date(2020,5,1))
 ```
 
 ### Cache
 
-Library keeps downloaded data in simple way during runtime. By default, using the cached data is enabled.
+Library keeps downloaded data and sources in simple way during runtime. By default, using the cached data is enabled.
 
 Caching can be disabled (e.g. for long running programs) by
 
 ```python
-x = covid19("FRA", cache=False)
+x,src = covid19("FRA", cache=False)
 ```
+
+*More advanced caching is coming.*
 
 ### Vintage
 
-Data Hub enables to fetch the vintage data, data archive collected at each data. The data collectiong is stable.
+Data Hub enables to fetch the vintage data, data archive collected on each day. The data collecting is stable.
 
 To fetch e.g. US data that were accessible on *10th April 2020* type
 
 ```python
-x = covid19("USA", end = "2020-04-10", vintage = True)
+x,src = covid19("USA", end = "2020-04-22", vintage = True)
 ```
 
 The vintage data are collected at the end of the day, but published with approximately 48 hour delay,
@@ -114,77 +122,103 @@ once the day is completed in all the timezones.
 Hence if `vintage = True`, but `end` is not set, warning is raised and `None` is returned.
 
 ```python
-x = covid19("USA", vintage=True) # too early to get today's vintage
+x,src = covid19("USA", vintage=True) # too early to get today's vintage
 ```
 
 ```
 UserWarning: vintage data not available yet
 ```
 
-### Raw
-
-You can also get the raw data, that no cleansing operation has been performed on. Type
-
-```python
-x = covid19("USA", raw=True)
-```
-
 ### Citations
 
-Dataset [citations](https://github.com/covid19datahub/COVID19/blob/master/inst/extdata/src.csv) are printed by default on `stdout`.
+Sources to data is returned as a second value. Apart from that
+aggregated [citations](https://github.com/covid19datahub/COVID19/blob/master/inst/extdata/src.csv) are printed to `stdout` by default.
 
-``` python
+```python
 from covid19dh import covid19
-x = covid19("CZE") 
+x,src = covid19("CZE") 
 ```
 
 ```
-Czech Statistical Office (2018), https://www.czso.cz/csu/czso/demograficka-rocenka-kraju-2009-az-2018
+We have invested a lot of time and effort in creating COVID-19 Data Hub, please cite the following when using it:
 
-Johns Hopkins Center for Systems Science and Engineering (2020), https://github.com/CSSEGISandData/COVID-19
+        Guidotti, E., Ardia, D., (2020), "COVID-19 Data Hub", Journal of Open Source Software 5(51):2376, doi: 10.21105/joss.02376.
 
-Ministery of Health of Czech Republic (2020), https://onemocneni-aktualne.mzcr.cz/
+A BibTeX entry for LaTeX users is
 
-Our World in Data (2020), https://github.com/owid/covid-19-data
+        @Article{,
+                title = {COVID-19 Data Hub},
+                year = {2020},
+                doi = {10.21105/joss.02376},
+                author = {Emanuele Guidotti and David Ardia},
+                journal = {Journal of Open Source Software},
+                volume = {5},
+                number = {51},
+                pages = {2376},
+        }
 
-Hale Thomas, Sam Webster, Anna Petherick, Toby Phillips, and Beatriz Kira (2020). Oxford COVID-19 Government Response Tracker, Blavatnik School of Government.
-
-World Bank Open Data (2018), https://data.worldbank.org/indicator/SP.POP.TOTL
-
-Guidotti, E., Ardia, D., (2020), "COVID-19 Data Hub", Working paper, doi: 10.13140/RG.2.2.11649.81763.
+To hide this message use 'verbose = FALSE'.
 ```
 
 This feature can be turned off by setting `verbose` to `False`.
 
 ```python
 from covid19dh import covid19
-x = covid19("CZE", verbose = False) 
+x,src = covid19("CZE", verbose = False) 
 ```
 
-You can separately get the reference data or the string citations as
+You can work with citations even separately. Feed the `cite()` function
+with the data and the sources object to get the message to be printed.
 
 ```python
 from covid19dh import covid19,cite
-x = covid19("ITA")
-refs = cite(x, raw=True)
-citations = cite(x)
+x,src = covid19("ITA")
+src,refs = cite(x, src)
 ```
 
-Pandas dataframe `refs` has following structure
+Except for constructing the textual references out of pandas dataframe of sources, `cite()` also filters out sources that are not used in the data, in example both `src` objects should be equal, since `covid19()` returns already filtered sources. 
+
+Pandas dataframe `src` has following structure
 
 ```
-                                               title                                             author  year                     institution  ... bibtype iso_alpha_3 administrative_area_level  data_type
-0                           Czech Statistical Office                                                     2018                                  ...                   1                         1          1
-1  Johns Hopkins Center for Systems Science and E...                                                     2020                                  ...                   5                         5          5
-2              Ministery of Health of Czech Republic                                                     2020                                  ...                   2                         2          2
-3                                  Our World in Data                                                     2020                                  ...                   1                         1          1
-4        Oxford COVID-19 Government Response Tracker  Hale Thomas, Sam Webster, Anna Petherick, Toby...  2020  Blavatnik School of Government  ...                  10                        10         10
-5                               World Bank Open Data                                                     2018                                  ...                   1                         1          1
-
-[6 rows x 10 columns]
+    iso_alpha_3  administrative_area_level  ...                     institution                                        textVersion
+137         CZE                        1.0  ...                             NaN                                                NaN
+138         CZE                        1.0  ...                             NaN                                                NaN
+139         CZE                        2.0  ...                             NaN                                                NaN
+140         CZE                        2.0  ...                             NaN                                                NaN
+141         CZE                        2.0  ...                             NaN                                                NaN
+142         CZE                        2.0  ...                             NaN                                                NaN
+143         CZE                        3.0  ...                             NaN                                                NaN
+144         CZE                        3.0  ...                             NaN                                                NaN
+145         CZE                        3.0  ...                             NaN                                                NaN
+539         NaN                        NaN  ...                             NaN                                                NaN
+540         NaN                        NaN  ...                             NaN                                                NaN
+541         NaN                        NaN  ...                             NaN                                                NaN
+542         NaN                        NaN  ...                             NaN                                                NaN
+543         NaN                        NaN  ...                             NaN                                                NaN
+544         NaN                        NaN  ...                             NaN                                                NaN
+545         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+546         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+547         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+548         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+549         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+550         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+551         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+552         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+553         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+554         NaN                        NaN  ...  Blavatnik School of Government  Hale Thomas, Sam Webster, Anna Petherick, Toby...
+555         NaN                        NaN  ...                             NaN                                                NaN
 ```
 
-List `citations` is equal to
+Dataframe columns are
+* *iso_alpha_3*, *administrative_area_level*,
+* *data_type*
+* *url*
+* *title*, *author*, *institution*
+* *year*
+* *bibtype*, *textVersion*
+
+List `refs` is equal to
 
 ```python
 [
@@ -197,8 +231,6 @@ List `citations` is equal to
     'Guidotti, E., Ardia, D., (2020), "COVID-19 Data Hub", Working paper, doi: 10.13140/RG.2.2.11649.81763.'
 ]
 ```
-
-
 
 ## Contribution
 
