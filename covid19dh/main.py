@@ -12,9 +12,10 @@ import requests
 from .cite import *
 from .cache import *
 
-def get_url(level, dt, vintage):
+def get_url(level, dt, raw, vintage):
     # dataname
-    dataname = f"data-{level}"
+    rawprefix = "raw" if raw else ""
+    dataname = f"{rawprefix}data-{level}"
     # vintage
     if vintage:
         # too new
@@ -81,17 +82,17 @@ def covid19(country = None,
     if start > end:
         warnings.warn("start is later than end")
         return None
-    if raw:
-        warnings.warn("parameter raw is deprecated, using cleansed data", category=DeprecationWarning)
+    #if raw:
+    #    warnings.warn("parameter raw is deprecated, using cleansed data", category=DeprecationWarning)
         
     # cache
-    df = read_cache(level, end, vintage)
+    df = read_cache(level, end, raw, vintage)
     src = None
     
     if cache is False or df is None:
         # get url from level
         try:
-            url,filename = get_url(level = level, dt = end, vintage = vintage)
+            url,filename = get_url(level = level, dt = end, raw = raw, vintage = vintage)
             if url is None:
                 return None
         except KeyError:
@@ -120,7 +121,7 @@ def covid19(country = None,
         df['date'] = df['date'].apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d"))
         df['iso_numeric'] = df['iso_numeric'].apply(lambda x: float(x))
 
-        write_cache(df, level, end, vintage)
+        write_cache(df, level, end, raw, vintage)
 
     # src
     if src is None:

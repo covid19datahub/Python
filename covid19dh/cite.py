@@ -12,7 +12,7 @@ def get_sources():
     response = requests.get(url) # headers={'User-Agent': 'Mozilla/5.0'}
     return pd.read_csv( StringIO(response.text))
     
-def cite(x, sources, raw = False):
+def cite(x, sources):
     # transform data
     isos = set(x["iso_alpha_3"].unique())
     params = set(x.columns)
@@ -30,9 +30,6 @@ def cite(x, sources, raw = False):
         )
     unique_references = references.groupby(["title"])
     #unique_references = references.groupby(["title","author","institution","url","textVersion","bibtype"]) 
-
-    if raw:
-        return unique_references.count().reset_index()
     
     # turn references into citations
     citations = []
