@@ -131,13 +131,14 @@ UserWarning: vintage data not available yet
 
 ### Citations
 
-Sources to data is returned as a second value. 
-<!--Apart from that aggregated [citations](https://github.com/covid19datahub/COVID19/blob/master/inst/extdata/src.csv) are printed to `stdout` by default.-->
+Sources to data is returned as a second value.
 
 ```python
 from covid19dh import covid19
-x,src = covid19("CZE") 
+x,src = covid19("CZE")
 ```
+
+Apart from that a following message is printed on `covid19()` call.
 
 ```
 We have invested a lot of time and effort in creating COVID-19 Data Hub, please cite the following when using it:
@@ -167,17 +168,21 @@ from covid19dh import covid19
 x,src = covid19("CZE", verbose = False) 
 ```
 
-A data sources can be acquired from full sources using `cite()`, filtering only the relevant sources.
+This message come from the function `cite()` that is used to get sources of a data.
+The returned data sources are only the ones, that the given data (supposed a subset of full data)
+comes from, filtering the irrelevant ones.
 
 ```python
 from covid19dh import covid19,cite,get_sources
-x,_ = covid19("ITA") # fetch data
-
-src_all = get_sources() # get all sources
-src_in_x = cite(x, src_all) # filter sources for x
+x,_ = covid19("ITA") # fetch data, throw returned sources
+src = cite(x) # get sources of x
 ```
 
-<!--Except for constructing the textual references out of pandas dataframe of sources, `cite()` also filters out sources that are not used in the data, in example both `src` objects should be equal, since `covid19()` returns already filtered sources.-->
+All sources can be acquired with
+
+```python
+src_all = get_sources() # get all sources
+```
 
 Pandas dataframe `src` has following structure
 

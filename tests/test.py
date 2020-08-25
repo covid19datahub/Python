@@ -5,6 +5,7 @@ sys.path.append(".")
 
 # === unit tests ===
 from test_covid19 import *
+from test_cite import *
 # ==================
 
 

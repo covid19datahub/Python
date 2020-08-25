@@ -152,9 +152,11 @@ def covid19(country = None,
     # sort
     df = df.sort_values(by=["id","date"])
     
-    src = cite(df, src)
+    # cite
+    src = cite(x = df, sources = src, verbose = False)
+    
     if verbose:
-        
+        # construct message
         message = "We have invested a lot of time and effort in creating COVID-19 Data Hub, please cite the following when using it:\n\n"
         message += "\t\033[1mGuidotti, E., Ardia, D., (2020), \"COVID-19 Data Hub\", Journal of Open Source Software 5(51):2376, doi: 10.21105/joss.02376.\033[0m\n\n"
         message += "A BibTeX entry for LaTeX users is\n\n"
@@ -169,13 +171,11 @@ def covid19(country = None,
         message += "\t\tpages = {2376},\n"
         message += "\t}\n\n"
         message += "\033[33mTo hide this message use 'verbose = FALSE'.\033[0m"
-
+        # print
         print(message)
-        #print("\033[1mData References:\033[0m\n", end="")
-        #for ref in refs:
-        #    print("\t" + ref, end="\n\n")
-        #print("\033[33mTo hide the data sources use 'verbose = False'.\033[0m")
     
     return df,src
+
+    
 
 __all__ = ["covid19"]

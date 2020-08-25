@@ -11,8 +11,12 @@ def get_sources():
     url = 'https://storage.covid19datahub.io/src.csv'
     response = requests.get(url) # headers={'User-Agent': 'Mozilla/5.0'}
     return pd.read_csv( StringIO(response.text))
-    
-def cite(x, sources):
+
+def cite(x, verbose = True, sources = None):
+    # all sources if missing
+    if sources is None:
+        sources = get_sources()
+        
     # transform data
     isos = set(x["iso_alpha_3"].unique())
     params = set(x.columns)
@@ -28,30 +32,23 @@ def cite(x, sources):
             r"\1\2/",
             u )
         )
-    unique_references = references.groupby(["title"])
-    #unique_references = references.groupby(["title","author","institution","url","textVersion","bibtype"]) 
+    #unique_references = references.groupby(["title"])
+    unique_references = references.groupby(["title","author","institution","url","textVersion","bibtype"]) 
     
     # turn references into citations
     citations = []
     for n,g in unique_references:
-        #for i in range(1):
-        for idx,row in g.iterrows():
-            title = n
-            author = row['author']
-            institution = row['institution']
-            url = row['url']
-            textVersion = row['textVersion']
-            bibtype = row['bibtype']
-            year = row['year']
-            #(title,author,institution,url,textVersion,bibtype) = n
-            #year = g.year.max()
-        
-            #if not author and not title:
-            #    warnings.warn("reference does not specify author nor title, omitting")
-            #    continue
-            #if not year:
-            #    warnings.warn("reference does not specify year, omitting")
-            #    continue
+        for i in range(1):
+        #for idx,row in g.iterrows():
+            #title = n
+            #author = row['author']
+            #institution = row['institution']
+            #url = row['url']
+            #textVersion = row['textVersion']
+            #bibtype = row['bibtype']
+            #year = row['year']
+            (title,author,institution,url,textVersion,bibtype) = n
+            year = g.year.max()
 
             if textVersion:
                 citation = textVersion
@@ -81,7 +78,12 @@ def cite(x, sources):
         
             citations.append(citation)
     
-    #citations.append("Guidotti, E., Ardia, D., (2020), \"COVID-19 Data Hub\", Working paper, doi: 10.13140/RG.2.2.11649.81763.")
-    return sources#, citations
-
+    if verbose:
+        print("\033[1mData References:\033[0m\n", end="")
+        for ref in citations:
+            print("\t" + ref, end="\n\n")
+        print("\033[33mTo hide the data sources use 'verbose = False'.\033[0m")
+        
+    return sources
+        
 __all__ = ["cite","get_sources"]
