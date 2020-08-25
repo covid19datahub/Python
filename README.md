@@ -168,20 +168,34 @@ from covid19dh import covid19
 x,src = covid19("CZE", verbose = False) 
 ```
 
-This message come from the function `cite()` that is used to get sources of a data.
-The returned data sources are only the ones, that the given data (supposed a subset of full data)
-comes from, filtering the irrelevant ones.
+To get the data sources of the data that has been acquired use function `cite()`.
+It will return only the relevant sources, filtering the irrelevant out.
 
 ```python
-from covid19dh import covid19,cite,get_sources
-x,_ = covid19("ITA") # fetch data, throw returned sources
 src = cite(x) # get sources of x
 ```
 
-All sources can be acquired with
+Function prints formatted citations to stdout.
+
+```
+Data References:
+        Czech Statistical Office (2018), https://www.czso.cz/
+
+        Johns Hopkins Center for Systems Science and Engineering (2020), https://github.com/
+
+        Ministery of Health of Czech Republic (2020), https://onemocneni-aktualne.mzcr.cz/
+
+        Our World in Data (2020), https://github.com/
+
+        Hale Thomas, Sam Webster, Anna Petherick, Toby Phillips, and Beatriz Kira (2020). Oxford COVID-19 Government Response Tracker, Blavatnik School of Government.
+
+        World Bank Open Data (2018), https://data.worldbank.org/
+```
+
+Switch the printing off by setting `verbose` parameter to `False`.
 
 ```python
-src_all = get_sources() # get all sources
+src = cite(x, verbose = False)
 ```
 
 Pandas dataframe `src` has following structure
@@ -224,21 +238,13 @@ Dataframe columns are
 * *year*
 * *bibtype*, *textVersion*
 
-<!--
-List `refs` is equal to
+
+*All sources* can be acquired with
 
 ```python
-[
-    'Czech Statistical Office (2018), https://www.czso.cz/csu/czso/demograficka-rocenka-kraju-2009-az-2018',
-    'Johns Hopkins Center for Systems Science and Engineering (2020), https://github.com/CSSEGISandData/COVID-19',
-    'Ministery of Health of Czech Republic (2020), https://onemocneni-aktualne.mzcr.cz/',
-    'Our World in Data (2020), https://github.com/owid/covid-19-data',
-    'Hale Thomas, Sam Webster, Anna Petherick, Toby Phillips, and Beatriz Kira (2020). Oxford COVID-19 Government Response Tracker, Blavatnik School of Government.',
-    'World Bank Open Data (2018), https://data.worldbank.org/indicator/SP.POP.TOTL',
-    'Guidotti, E., Ardia, D., (2020), "COVID-19 Data Hub", Working paper, doi: 10.13140/RG.2.2.11649.81763.'
-]
+src_all = get_sources() # get all sources
 ```
--->
+
 
 ## Contribution
 
