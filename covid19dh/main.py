@@ -170,7 +170,7 @@ def covid19(country = None,
         message += "\t\tnumber = {51},\n"
         message += "\t\tpages = {2376},\n"
         message += "\t}\n\n"
-        message += "\033[33mTo hide this message use 'verbose = FALSE'.\033[0m"
+        message += "\033[33mTo hide this message use 'verbose = False'.\033[0m"
         # print
         print(message)
     
