@@ -82,8 +82,6 @@ def covid19(country = None,
     if start > end:
         warnings.warn("start is later than end")
         return None
-    #if raw:
-    #    warnings.warn("parameter raw is deprecated, using cleansed data", category=DeprecationWarning)
         
     # cache
     df = read_cache(level, end, raw, vintage)
