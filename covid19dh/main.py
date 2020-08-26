@@ -47,7 +47,7 @@ def covid19(country = None,
             end     = None, # defaultly today
             cache   = True,
             verbose = True,
-            raw     = False,
+            raw     = True,
             vintage = False):
     """Main function for module. Fetches data from hub.
     
