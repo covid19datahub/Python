@@ -168,6 +168,7 @@ from covid19dh import covid19
 x,src = covid19("CZE", verbose = False) 
 ```
 
+<!--
 To get the data sources of the data that has been acquired use function `cite()`.
 It will return only the relevant sources, filtering the irrelevant out.
 
@@ -197,6 +198,7 @@ Switch the printing off by setting `verbose` parameter to `False`.
 ```python
 src = cite(x, verbose = False)
 ```
+-->
 
 Pandas dataframe `src` has following structure
 
@@ -238,12 +240,18 @@ Dataframe columns are
 * *year*
 * *bibtype*, *textVersion*
 
-
+In progress
+* conversion of the sources
+  * printed list of references
+  * BibTeX format
+  
+<!--
 *All sources* can be acquired with
 
 ```python
 src_all = get_sources() # get all sources
 ```
+-->
 
 
 ## Contribution

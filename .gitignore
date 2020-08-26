@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# my added py scripts in main directory
+/*.py
+!setup.py

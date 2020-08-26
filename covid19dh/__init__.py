@@ -10,7 +10,6 @@ Todo:
 
 import pkg_resources
 from .main import *
-from .cite import *
 
 try:
     __version__ = pkg_resources.get_distribution("covid19dh").version
