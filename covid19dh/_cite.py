@@ -78,12 +78,13 @@ def cite(x, verbose = True, sources = None):
     def is_source_used(ref):
         # data type not present
         if not ref['data_type'] in params: return False
-        def attr_match(f, o1, o2):
-            return not o1[f] or (o1[f] == o2[f])
-        used = x.apply(lambda row: attr_match("iso_alpha_3",ref,row) and attr_match("administrative_area_level",ref,row), axis=1)
-        return used.any()
-    sel = sources.apply(is_source_used, axis=1)
-    sources = sources[sel]
+        # fallbacks
+        if not ref['iso_alpha_3'] or not ref['administrative_area_level']: return True
+        
+        # check both equal
+        return ((x.iso_alpha_3 == ref.iso_alpha_3) & (x.administrative_area_level == ref.administrative_area_level)).any()
+    
+    sources = sources[sources.apply(is_source_used, axis=1)]
     
     # drop fallback
     for p in params:
