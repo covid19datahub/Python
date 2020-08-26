@@ -64,10 +64,49 @@ def cite(x, verbose = True, sources = None):
     if sources is None:
         sources = get_sources()
     
+    # per iso
+    references = pd.DataFrame(data=None, columns=sources.columns)
+    for iso,country in x.groupby(["iso_alpha_3"]):
+        # levels
+        level = country.administrative_area_level.unique()[0]
+        # empty attributes
+        empty_params = country.apply(lambda c: c.isnull().all() | (c == 0).all())
+        params = x.columns[~empty_params]
+        
+        # filter
+        src = sources[
+            (sources.administrative_area_level == level) & # level 
+            (sources.iso_alpha_3 == iso) & # iso
+            sources.data_type.isin(params) # data type
+        ]
+        # fallback for missing
+        missing = set(params) - set(src.data_type.unique())
+        if missing:
+            src = src.append(sources[
+                sources.data_type.isin(missing) & # data type
+                sources.iso_alpha_3.isnull() & # empty ISO
+                sources.administrative_area_level.isnull() # empty level
+            ])
+            
+        # set iso,level
+        src.iso_alpha_3 = iso
+        src.administrative_area_level = level
+        
+        # join
+        references = references.append(src)
+    
+    references.drop_duplicates(inplace = True)
+            
+    return references
+        
+        
+    
+    
+    # ===
     # hash data stats
+    params = set(x.columns)
     isos = set(x["iso_alpha_3"].unique())
     isos.add(math.nan)
-    params = set(x.columns)
     # prefilter
     sources = sources[
         sources["iso_alpha_3"].isin(isos) &
@@ -89,8 +128,9 @@ def cite(x, verbose = True, sources = None):
     # drop fallback
     for p in params:
         non_fallback = (sources.data_type == p) & (sources.iso_alpha_3 != '')
+        no_data = (x[p].isnull() | (x[p] == 0))
         fallback = (sources.data_type == p) & (sources.iso_alpha_3 == '')
-        if non_fallback.any():
+        if non_fallback.any() or no_data.all():
             sources.drop(fallback.index[fallback].tolist(), inplace=True)
     
     #citations = sources_to_citations(sources)
