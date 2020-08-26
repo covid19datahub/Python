@@ -2,7 +2,7 @@
 
 # Python Interface to COVID-19 Data Hub
 
-[![](https://img.shields.io/pypi/v/covid19dh.svg?color=brightgreen)](https://pypi.org/pypi/covid19dh/) [![](https://img.shields.io/pypi/dm/covid19dh.svg?color=blue)](https://pypi.org/pypi/covid19dh/) [![DOI](https://joss.theoj.org/papers/10.21105/joss.02376/status.svg)](https://doi.org/10.21105/joss.02376) [![](https://github.com/covid19datahub/Python/workflows/on_master_commit/badge.svg)](https://github.com/covid19datahub/Python)
+[![](https://img.shields.io/pypi/v/covid19dh.svg?color=brightgreen)](https://pypi.org/pypi/covid19dh/) [![](https://img.shields.io/pypi/dm/covid19dh.svg?color=blue)](https://pypi.org/pypi/covid19dh/) [![DOI](https://joss.theoj.org/papers/10.21105/joss.02376/status.svg)](https://doi.org/10.21105/joss.02376) [![](https://github.com/covid19datahub/Python/workflows/utests_on_commit/badge.svg)](https://github.com/covid19datahub/Python)
 
 The goal of COVID-19 Data Hub is to provide the research community with a [unified dataset](https://covid19datahub.io/articles/data.html) by collecting worldwide fine-grained case data, merged with exogenous variables helpful for a better understanding of COVID-19. Please agree to the [Terms of Use](https://covid19datahub.io/LICENSE.html) and cite the following reference when using it:
 

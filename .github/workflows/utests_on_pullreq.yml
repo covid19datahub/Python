@@ -1,5 +1,5 @@
 
-name: on_master_pull_request # workflow name
+name: utests_on_pullreq # workflow name
 on: # trigger
   pull_request:
     branches: [ master ]

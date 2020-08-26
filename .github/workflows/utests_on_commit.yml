@@ -1,5 +1,5 @@
 
-name: on_master_commit # workflow name
+name: utests_on_commit # workflow name
 on: # trigger
   push:
     branches: [ master ]
