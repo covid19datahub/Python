@@ -111,7 +111,7 @@ Logical. Retrieve the snapshot of the dataset that was generated at the `end` da
 To fetch e.g. US data that were accessible on *22th April 2020* type
 
 ```python
-x, src = covid19("US", end = "2020-04-22", vintage = True)
+x, src = covid19("USA", end = "2020-04-22", vintage = True)
 ```
 
 The vintage data are collected at the end of the day, but published with approximately 48 hour delay,
