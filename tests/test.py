@@ -4,8 +4,9 @@ import unittest
 sys.path.append(".")
 
 # === unit tests ===
-from test_covid19 import *
-#from test_cite import *
+from test_covid19_latest import *
+from test_covid19_vintage import *
+from test_cite import *
 # ==================
 
 
