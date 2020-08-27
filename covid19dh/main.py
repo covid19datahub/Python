@@ -117,8 +117,9 @@ def covid19(country = None,
                     write_src_cache(src, end, vintage)
         # cast columns
         df['date'] = df['date'].apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d"))
-        df['iso_numeric'] = df['iso_numeric'].apply(lambda x: float(x))
-
+        try: df['iso_numeric'] = df['iso_numeric'].apply(lambda x: float(x))
+        except: pass
+        
         write_cache(df, level, end, raw, vintage)
 
     # src
@@ -134,10 +135,19 @@ def covid19(country = None,
         # no idea why, but I found solution to mute it as follows
         with warnings.catch_warnings():
             warnings.simplefilter(action='ignore', category=FutureWarning)
-            df = df[(df['iso_alpha_3'].isin(country)) |
-                    (df['iso_alpha_2'].isin(country)) |
-                    (df['iso_numeric'].isin(country)) |
-                    (df['administrative_area_level_1'].map(lambda s: s.upper()).isin(country))  ]
+            
+            country_filter = df['administrative_area_level_1'].map(lambda s: s.upper()).isin(country)
+            for feature in ["iso_alpha_2","iso_alpha_3","iso_numeric"]:
+                try:
+                    country_filter = country_filter | df[feature].isin(country)
+                except KeyError:
+                    pass
+            df = df[country_filter]
+            
+            #df = df[(df['iso_alpha_3'].isin(country)) |
+            #        (df['iso_alpha_2'].isin(country)) |
+            #        (df['iso_numeric'].isin(country)) |
+            #        (df['administrative_area_level_1'].map(lambda s: s.upper()).isin(country))  ]
     if start is not None:
         df = df[df['date'] >= start]
     if end is not None:
@@ -146,7 +156,7 @@ def covid19(country = None,
     # detect empty
     if df.empty:
         warnings.warn("no data for given settings", category=ResourceWarning)
-        return None
+        return None,None
     # sort
     df = df.sort_values(by=["id","date"])
     
