@@ -20,7 +20,7 @@ def get_url(level, dt, raw, vintage):
     if vintage:
         # too new
         if dt >= datetime.datetime.now() - datetime.timedelta(days = 2):
-            warnings.warn("vintage data not available yet")
+            warnings.warn("vintage data not available yet", category=ResourceWarning)
             return None,None
         dt_str = dt.strftime("%Y-%m-%d")
         filename = f"{ dt_str }.zip"
