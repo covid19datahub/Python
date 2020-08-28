@@ -44,7 +44,7 @@ The function `covid19()` returns 2 pandas dataframes:
 
 ### Country
 
-List of country names (case-insensitive) or ISO codes (alpha-2, alpha-3 or numeric). The list of ISO codes can be found [here](https://github.com/covid19datahub/COVID19/blob/master/inst/extdata/src.csv).
+List of country names (case-insensitive) or ISO codes (alpha-2, alpha-3 or numeric). The list of ISO codes can be found [here](https://github.com/covid19datahub/COVID19/blob/master/inst/extdata/db/ISO.csv).
 
 Fetching data from a particular country:
 
