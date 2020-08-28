@@ -127,7 +127,7 @@ x, src = covid19("USA", vintage = True) # too early to get today's vintage
 UserWarning: vintage data not available yet
 ```
 
-### Citations
+### Data Sources
 
 The data sources are returned as second value.
 
