@@ -75,13 +75,13 @@ def covid19(country = None,
         end = parseDate(end)
         start = parseDate(start)
     except:
-        return None
+        return None, None
     if level not in {1,2,3}:
         warnings.warn("valid options for 'level' are:\n\t1: country-level data\n\t2: state-level data\n\t3: city-level data")
-        return None
+        return None, None
     if start > end:
         warnings.warn("start is later than end")
-        return None
+        return None, None
         
     # cache
     df = read_cache(level, end, raw, vintage)
@@ -92,20 +92,20 @@ def covid19(country = None,
         try:
             url,filename = get_url(level = level, dt = end, raw = raw, vintage = vintage)
             if url is None:
-                return None
+                return None, None
         except KeyError:
             warnings.warn("invalid level")
-            return None
+            return None, None
         # download
         try:
             response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
         except:
             if vintage:
                 warnings.warn("vintage data not available yet")
-                return None
+                return None, None
             else:
                 warnings.warn("error to fetch data")
-                return None
+                return None, None
         # parse
         with zipfile.ZipFile( BytesIO(response.content) ) as zz:
             with zz.open(filename) as fd:
