@@ -137,6 +137,10 @@ x, src = covid19("USA")
 print(src)
 ```
 
+### Additional information
+
+Find out more at https://covid19datahub.io
+
 ## Acknowledgements
 
 Developed and maintained by [Martin Benes](https://pypi.org/user/martinbenes1996/).
