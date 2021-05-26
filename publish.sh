@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # remove previous releases
 rm -rf build/ dist/ covid19dh.egg-info/ __pycache__/
