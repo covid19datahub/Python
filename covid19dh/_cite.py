@@ -2,7 +2,6 @@
 from io import StringIO
 import math
 import re
-import warnings
 
 import pandas as pd
 import requests
@@ -66,7 +65,7 @@ def cite(x, verbose = True, sources = None):
     
     # per iso
     references = pd.DataFrame(data=None, columns=sources.columns)
-    for iso,country in x.groupby(["iso_alpha_3"]):
+    for iso,country in x.groupby("iso_alpha_3"):
         # levels
         level = country.administrative_area_level.unique()[0]
         # empty attributes
@@ -82,18 +81,18 @@ def cite(x, verbose = True, sources = None):
         # fallback for missing
         missing = set(params) - set(src.data_type.unique())
         if missing:
-            src = src.append(sources[
+            src = pd.concat([src, sources[
                 sources.data_type.isin(missing) & # data type
                 sources.iso_alpha_3.isnull() & # empty ISO
                 sources.administrative_area_level.isnull() # empty level
-            ])
+            ]])
             
         # set iso,level
         src.iso_alpha_3 = iso
         src.administrative_area_level = level
         
         # join
-        references = references.append(src)
+        references = pd.concat([references, src])
     
     references.drop_duplicates(inplace = True)
             
